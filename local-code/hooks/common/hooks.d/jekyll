@@ -1,0 +1,30 @@
+#!/bin/bash
+set -eu
+
+read oldrev newrev refname
+
+# Get project name from directory name
+PROJECT=$(basename "$PWD")
+
+# Remove .git from the end of the name
+PROJECT=${PROJECT%.git}
+
+# Website should be found here now
+CHECKOUT_DIR=/tmp/git/${PROJECT}
+
+if [ ! -e "${CHECKOUT_DIR}/jekylldocs/_config.yml" ]; then
+  # Can't exit with 1, or it'll fail deployment
+  exit 0
+fi
+
+cd ${CHECKOUT_DIR}/jekylldocs/
+
+mkdir -p ${CHECKOUT_DIR}/htdocs
+
+export PATH=$HOME/.rbenv/bin:$PATH
+eval "$(rbenv init -)"
+
+# Run bundle
+bundle || true
+# Run jekyll
+jekyll --no-auto --no-server ../htdocs/

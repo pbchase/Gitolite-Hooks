@@ -27,3 +27,18 @@ generate-documentation
 ---
 
 Builds project documentation to /srv/documentation/PROJECT-NAME/ using Doxygen.
+
+checkout
+---
+
+Checkout HEAD of the repository into /tmp/git/PROJECT-NAME/ for further manipulation.
+
+jekyll
+---
+
+Use Bundler and Jekyll to build /tmp/git/PROJECT-NAME/jekylldocs/ to /tmp/git/PROJECT-NAME/htdocs/. Requires `checkout` hook to be specified before this one. Hook will not run if /tmp/git/PROJECT-NAME/jekylldocs/_config.yml is missing, so is safe to run on all web repositories.
+
+nginx-deploy
+---
+
+Copies a checked out and built project from /tmp/git/PROJECT-NAME/ to /www/PROJECT-NAME. Will also symlink and reload Nginx configuration.

@@ -1,0 +1,17 @@
+#!/bin/bash
+set -eu
+
+read oldrev newrev refname
+
+# Get project name from directory name
+PROJECT=$(basename "$PWD")
+
+# Remove .git from the end of the name
+PROJECT=${PROJECT%.git}
+
+# Where the checkout should reside
+CHECKOUT_DIR=/tmp/git/${PROJECT}
+mkdir -p ${CHECKOUT_DIR}
+
+# Checkout this website
+GIT_WORK_TREE=${CHECKOUT_DIR} git checkout -q -f

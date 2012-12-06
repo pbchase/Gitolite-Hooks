@@ -1,0 +1,34 @@
+#!/bin/bash
+set -eu
+
+read oldrev newrev refname
+
+# Get project name from directory name
+PROJECT=$(basename "$PWD")
+
+# Remove .git from the end of the name
+PROJECT=${PROJECT%.git}
+
+CHECKOUT_DIR=/tmp/git/${PROJECT}
+
+# Where the checkout should reside
+WWW_DIR=/www/${PROJECT}
+
+# Where logs should reside
+LOG_DIR=/www/logs/${PROJECT}
+mkdir -p $LOG_DIR ; chmod 775 $LOG_DIR/../ ; chmod 775 $LOG_DIR
+
+# Create the folder if it doesn't exist
+mkdir -p $WWW_DIR
+
+# Checkout this website
+cp -r ${CHECKOUT_DIR}/* ${WWW_DIR}/
+
+# Set up permissions
+chmod -R 775 $WWW_DIR
+
+# Replace some template values in our nginx.conf
+sed -i -e "s_{{WEBDIR}}_${WWW_DIR}_g" -e "s_{{LOGDIR}}_${LOG_DIR}_g" -e "s_{{PROJECT}}_${PROJECT}_g" ${WWW_DIR}/nginx.conf
+
+# Symlink the nginx config to the nginx directory and tell nginx to reload
+sudo ln -sf ${WWW_DIR}/nginx.conf /etc/nginx/sites-enabled/${PROJECT}.conf && sudo nginx -s reload
