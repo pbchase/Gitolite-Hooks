@@ -14,4 +14,4 @@ CHECKOUT_DIR=/tmp/git/${PROJECT}
 mkdir -p ${CHECKOUT_DIR}
 
 # Checkout this website
-GIT_WORK_TREE=${CHECKOUT_DIR} git checkout -q -f
+GIT_WORK_TREE=${CHECKOUT_DIR} git checkout -q -f master
